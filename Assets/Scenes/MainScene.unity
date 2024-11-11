@@ -2035,7 +2035,7 @@ MonoBehaviour:
   mouseSens: 40
   bobFrequency: 10
   bobAmplitude: 0.05
-  sprintFOVMultiplier: 0.8
+  sprintFOVMultiplier: 1.2
   crouchHeight: 0.5
 --- !u!1 &65702495059058644
 GameObject:
