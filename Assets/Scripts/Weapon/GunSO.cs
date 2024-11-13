@@ -30,6 +30,7 @@ public class GunSO : ScriptableObject
         Model = GameObject.Instantiate(ModelPrefab);
         ShootTimer = 0;
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
+        
     }
 
     void Shoot(Camera FPScam)
