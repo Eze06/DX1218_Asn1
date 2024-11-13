@@ -16,8 +16,6 @@ public class PlayerMovement : MonoBehaviour
     private InputAction sprintAction;
     private InputAction crouchAction;
 
-
-
     [Header("Movement Variables")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float walkSpeedMult = 1f;
