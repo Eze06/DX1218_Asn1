@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName="Weapon/trailStats")]
-public class BulletTrailStats : MonoBehaviour
+public class BulletTrailStats : ScriptableObject
 {
     public Material material;
     public AnimationCurve WidthCurve;

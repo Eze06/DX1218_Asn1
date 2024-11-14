@@ -23,17 +23,16 @@ public class GunSO : ScriptableObject
 
     private float ShootTimer;
 
-    void Create(Transform parent, MonoBehaviour monoBehaviour) //Reset all variables for Scriptable Object
+    public void Create(Transform parent, MonoBehaviour monoBehaviour) //Reset all variables for Scriptable Object
     {
         this.monoBehaviour = monoBehaviour;
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         Model = GameObject.Instantiate(ModelPrefab);
         ShootTimer = 0;
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
-        
     }
 
-    void Shoot(Camera FPScam)
+    public void Shoot(Camera FPScam)
     {
         if (ShootTimer >= 0)
         {
