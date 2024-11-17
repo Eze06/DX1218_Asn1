@@ -6,13 +6,20 @@ using UnityEngine.Pool;
 public class Gun : MonoBehaviour
 {
     [SerializeField] AmmoData ammoData;
-    [SerializeField] GunData gunData;
+    public GunData gunData;
     [SerializeField] BulletTrailStats bulletTrail;
     ObjectPool<TrailRenderer> TrailPool;
 
     [SerializeField] ParticleSystem ShootSystem;
+
+    private void Awake()
+    {
+        TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+    }
+
     public void Shoot(Transform parent)
     {
+
         Vector3 ShootDirection = parent.forward;
 
         if (Physics.Raycast(parent.position, ShootDirection, out RaycastHit hitInfo, float.MaxValue, gunData.HitMask))

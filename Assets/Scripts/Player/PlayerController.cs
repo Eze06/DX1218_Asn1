@@ -9,14 +9,13 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerInput playerInput;
     private CharacterController characterController;
-    private PlayerGunSelector playerGunSelector;
-
     //Input Actions
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction lookAction;
     private InputAction sprintAction;
     private InputAction crouchAction;
+    [HideInInspector] public InputAction shootAction;
 
 
     [Header("Movement Variables")]
@@ -69,15 +68,18 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
-        playerGunSelector = GetComponent<PlayerGunSelector>();
 
         moveAction = playerInput.actions["Movement"];
         jumpAction = playerInput.actions["Jump"];
         lookAction = playerInput.actions["Look"];
         sprintAction = playerInput.actions["Sprint"];
         crouchAction = playerInput.actions["Crouch"];
+        shootAction = playerInput.actions["Shoot"];
 
         normalHeight = characterController.height;
 
@@ -96,7 +98,7 @@ public class PlayerController : MonoBehaviour
         Jump();
         HandleGravity();
         HandleSprint();
-        HandleCrouch();
+        HandleCrouch();   
 
 
         Vector2 input = moveAction.ReadValue<Vector2>();

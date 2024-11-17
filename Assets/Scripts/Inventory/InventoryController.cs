@@ -1,26 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [DisallowMultipleComponent]
 public class InventoryController : MonoBehaviour
 {
-    [SerializeField] private InventoryData inventoryData;
+    private PlayerController playerController;
+
+    [SerializeField] public InventoryData inventoryData;
     [SerializeField] private Camera FPSCamera;
 
     [HideInInspector] public Gun CurrentGun;
 
+
     private Gun PrimaryGun;
     private Gun SecondaryGun;
+
+    private void Start()
+    {
+        this.playerController = GetComponent<PlayerController>();
+    }
+    public void HandleSooting()
+    {
+        if (CurrentGun == null)
+            return;
+
+        
+
+
+    }
+
+
+
 
     public void SelectPrimaryGun()
     {
         if (PrimaryGun == null) return;
 
         CurrentGun = PrimaryGun;
-    } 
-    
+    }
+
     public void SelectSecondaryGun()
     {
         if (SecondaryGun == null) return;

@@ -10,12 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 513f46acaba42d3499f0b2a9b326821f, type: 3}
-  m_Name: AK-47 Trail
+  m_Name: ACRTrail
   m_EditorClassIdentifier: 
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: d771645f9ac10d241b18277409d02a55, type: 2}
   WidthCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.013230436
+      value: 0.1
+      inSlope: -0.005022638
+      outSlope: -0.005022638
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -51,5 +60,5 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  MissDistance: 100
+  MissDistance: 500
   SimulationSpeed: 100

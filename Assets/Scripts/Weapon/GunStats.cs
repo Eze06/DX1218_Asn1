@@ -18,6 +18,12 @@ public class GunData : ScriptableObject
         SHOTGUN
     }
 
+    public enum ShootType
+    {
+        HITSCAN,
+        PROJECTILE
+    }
+
     public enum WeaponType
     {
         PRIMARY,
@@ -36,6 +42,7 @@ public class GunData : ScriptableObject
     public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
     public ShootMode primaryShootMode;
     public ShootMode secondaryShootMode;
+    public ShootType secondaryShootType;
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;
