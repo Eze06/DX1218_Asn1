@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6433ac55385eef64a9d7c31df0956ef9, type: 3}
+  m_Script: {fileID: 11500000, guid: de6c1c97a18840542ba9698d531a24a7, type: 3}
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
-  GunOpt: []
+  GunList: []
+  AmmoList: []
