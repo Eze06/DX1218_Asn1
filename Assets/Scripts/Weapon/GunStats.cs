@@ -51,7 +51,7 @@ public class GunData : ScriptableObject
     public ShootMode secondaryShootMode;
 
     public ShootType weaponShootType;
-    private FireMode fireMode;
+    [HideInInspector] public FireMode fireMode;
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;

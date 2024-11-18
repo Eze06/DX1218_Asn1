@@ -15,13 +15,15 @@ MonoBehaviour:
   HitMask:
     serializedVersion: 2
     m_Bits: 0
-  gunName: ' '
+  gunName: ACR
   weaponType: 0
   droppablePrefab: {fileID: 0}
   FireRate: 0.25
   Spread: {x: 0.1, y: 0.1, z: 0.1}
   primaryShootMode: 0
   secondaryShootMode: 0
+  weaponShootType: 0
+  fireMode: 0
   BulletsPerBurst: 0
   ammoData: {fileID: 0}
   RoundsPerMag: 30

@@ -12,38 +12,52 @@ public class Gun : MonoBehaviour
 
     [SerializeField] ParticleSystem ShootSystem;
 
+    private float nextFireTime;
+    public int CurrentRounds;
+
     private void Awake()
     {
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        nextFireTime = 0;
     }
 
     public void SwitchFireMode()
     {
-
-    }
-
-    public void Shoot(Transform parent)
-    {
-
-        //Check if gun is in primary or secondary fire mode
-        //Check what is the fire mode
-        //Shoot
-
-        switch (gunData)
+        if(gunData.fireMode == GunData.FireMode.PRIMARY_FIRE)
         {
-
-        }
-
-        Vector3 ShootDirection = parent.forward;
-
-        if (Physics.Raycast(parent.position, ShootDirection, out RaycastHit hitInfo, float.MaxValue, gunData.HitMask))
-        {
-            StartCoroutine(PlayTrail(ShootSystem.transform.position, hitInfo.point, hitInfo));
+            gunData.fireMode = GunData.FireMode.SECONDARY_FIRE;
+            return;
         }
         else
         {
-            StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootDirection * bulletTrail.MissDistance, new RaycastHit()));
+            gunData.fireMode = GunData.FireMode.PRIMARY_FIRE;
+            return;
+        }
+    }
 
+    public void Shoot(Camera fpsCamera)
+    {
+        if (Time.time <= nextFireTime)
+            return;
+
+        nextFireTime = Time.time + gunData.FireRate;
+
+        Ray ray = fpsCamera.ViewportPointToRay(
+        new Vector3(0.5f, 0.5f, 0.0f));
+
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, float.MaxValue))
+        {
+            Debug.Log(hitInfo.collider.name);
+        }        
+    }
+
+    public void Burst(Camera fpsCamera)
+    {
+        for(int i = 0; i < gunData.BulletsPerBurst;i++)
+        {
+            if (CurrentRounds <= 0)
+                break;   
         }
     }
 
@@ -70,7 +84,6 @@ public class Gun : MonoBehaviour
         }
 
         yield return new WaitForSeconds(bulletTrail.Duration);
-        yield return null;
         instance.emitting = false;
         instance.gameObject.SetActive(false);
         TrailPool.Release(instance);
