@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName="Weapon/GunData")]
@@ -30,6 +31,12 @@ public class GunData : ScriptableObject
         SECONDARY
     }    
 
+    public enum FireMode
+    {
+        PRIMARY_FIRE,
+        SECONDARY_FIRE,
+    }
+
     public LayerMask HitMask;
 
     [Header("Gun Variables")]
@@ -42,7 +49,9 @@ public class GunData : ScriptableObject
     public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
     public ShootMode primaryShootMode;
     public ShootMode secondaryShootMode;
-    public ShootType secondaryShootType;
+
+    public ShootType weaponShootType;
+    private FireMode fireMode;
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;

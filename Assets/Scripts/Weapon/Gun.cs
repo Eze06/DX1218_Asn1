@@ -17,8 +17,22 @@ public class Gun : MonoBehaviour
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
     }
 
+    public void SwitchFireMode()
+    {
+
+    }
+
     public void Shoot(Transform parent)
     {
+
+        //Check if gun is in primary or secondary fire mode
+        //Check what is the fire mode
+        //Shoot
+
+        switch (gunData)
+        {
+
+        }
 
         Vector3 ShootDirection = parent.forward;
 
