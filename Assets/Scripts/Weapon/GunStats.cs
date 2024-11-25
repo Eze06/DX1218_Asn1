@@ -44,14 +44,18 @@ public class GunData : ScriptableObject
     public WeaponType weaponType;
     public GameObject droppablePrefab;
 
-    [Header("Shooting Variable")]
+    [Header("Shooting Variables")]
     public float FireRate = 0.25f;
-    public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
     public ShootMode primaryShootMode;
     public ShootMode secondaryShootMode;
 
     public ShootType weaponShootType;
     [HideInInspector] public FireMode fireMode;
+
+    [Header("Recoil Variables")]
+    public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
+    public float returnSpeed;
+    public float snappiness;
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;
