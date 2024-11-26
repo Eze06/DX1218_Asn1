@@ -1503,6 +1503,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2005606470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &359719652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1067888839342255546, guid: e3a08dbe50a1d394a859296aef687391,
+    type: 3}
+  m_PrefabInstance: {fileID: 5348045131903663537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &659559900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 659559901}
+  m_Layer: 0
+  m_Name: WeaponParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &659559901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659559900}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1075470781}
+  m_Father: {fileID: 7202193381321740785}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &659800813
 Mesh:
   m_ObjectHideFlags: 0
@@ -2287,12 +2325,27 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5348045131903663537}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 359719652}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe5403ae799995e4cb01a5ba79c34fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1579534894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359719652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1cf593af736a184784c65f349c7d4e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kickBackParent: {fileID: 659559901}
+  kickBackReturnSpeed: 2
+  kickBackSnappiness: 6
 --- !u!1 &1791932068
 GameObject:
   m_ObjectHideFlags: 0
@@ -2581,7 +2634,6 @@ MonoBehaviour:
   AmmoList: []
   FPSCamera: {fileID: 1791932070}
   CurrentGun: {fileID: 0}
-  camRecoil: {fileID: 2030391801}
 --- !u!1 &2030391799
 GameObject:
   m_ObjectHideFlags: 0
@@ -2864,7 +2916,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 7202193381321740785}
+    m_TransformParent: {fileID: 659559901}
     m_Modifications:
     - target: {fileID: 1067888839342255546, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
@@ -2959,7 +3011,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1067888839342255546, guid: e3a08dbe50a1d394a859296aef687391,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1579534894}
   m_SourcePrefab: {fileID: 100100000, guid: e3a08dbe50a1d394a859296aef687391, type: 3}
 --- !u!4 &7202193381321740785
 Transform:
@@ -2974,7 +3030,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1075470781}
+  - {fileID: 659559901}
   - {fileID: 1958555488}
   - {fileID: 118805993}
   - {fileID: 2110919789}

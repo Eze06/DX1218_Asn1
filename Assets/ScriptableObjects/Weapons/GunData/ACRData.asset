@@ -23,9 +23,10 @@ MonoBehaviour:
   secondaryShootMode: 0
   weaponShootType: 0
   fireMode: 0
-  Spread: {x: -2, y: 2, z: 0.35}
+  Spread: {x: -6, y: 3, z: 0.35}
   returnSpeed: 2
   snappiness: 6
+  kickBackAmt: 0.1
   BulletsPerBurst: 0
   ammoData: {fileID: 0}
   RoundsPerMag: 30
