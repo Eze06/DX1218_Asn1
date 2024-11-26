@@ -16,11 +16,13 @@ public class Gun : MonoBehaviour
     public int CurrentRounds;
 
     private CameraRecoil camRecoil;
+    private GunAnimator gunAnimator;
 
     private void Awake()
     {
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         camRecoil = GameObject.Find("CameraRecoil").GetComponent<CameraRecoil>();
+        gunAnimator = GetComponent<GunAnimator>();
         nextFireTime = 0;
     }
 
@@ -52,9 +54,11 @@ public class Gun : MonoBehaviour
         camRecoil.snappiness = gunData.snappiness;
         camRecoil.returnSpeed = gunData.returnSpeed;
 
+        gunAnimator.UpdateKickBack(gunData.kickBackAmt);
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, float.MaxValue))
         {
-            Debug.Log(hitInfo.collider.name);
+            Debug.Log(hitInfo.point);
         }        
     }
 

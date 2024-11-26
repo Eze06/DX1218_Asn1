@@ -1,28 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 [DisallowMultipleComponent]
 public class GunAnimator : MonoBehaviour
 {
-    private Transform kickBackParent;
+
+    [SerializeField] private Transform kickBackParent;
     private Vector3 kickBackEndPos;
+    private Vector3 CurrentKickBackPos;
 
-
-
-    private void UpdateKickBack(GunData gunData)
+    [Header("Kickback Variables")]
+    [SerializeField]private float kickBackReturnSpeed = 2;
+    [SerializeField] private float kickBackSnappiness = 6;
+    private void Update()
     {
-        if (kickBackParent.localPosition == Vector3.zero && kickBackEndPos == Vector3.zero)
-            return;
+        kickBackEndPos = Vector3.Lerp(kickBackEndPos, Vector3.zero, kickBackReturnSpeed * Time.deltaTime);
+        CurrentKickBackPos = Vector3.Slerp(CurrentKickBackPos, kickBackEndPos, kickBackSnappiness * Time.deltaTime);
 
-        //float speed;
-        //if(kickBackEndPos == Vector3.zero)
-        //{
-        //    speed = gunData.kickBackReturnSpeed;
-        //}
-        //else
-        //{
-        //    speed = gunData.kickBackSpeed;
-        //}
-    }    
+        kickBackParent.localPosition = CurrentKickBackPos;
+    }
+    public void UpdateKickBack(float kickBackAmount)
+    {
+        kickBackEndPos += new Vector3(0,0f, -kickBackAmount);
+
+    }
 }

@@ -56,6 +56,8 @@ public class GunData : ScriptableObject
     public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
     public float returnSpeed;
     public float snappiness;
+    public float kickBackAmt = 5f;
+
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;
