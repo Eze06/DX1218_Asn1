@@ -7,10 +7,9 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] AmmoData ammoData;
     public GunData gunData;
-    [SerializeField] BulletTrailStats bulletTrail;
-    ObjectPool<TrailRenderer> TrailPool;
+    ObjectPool<GameObject> TrailPool;
 
-    [SerializeField] ParticleSystem ShootSystem;
+    [SerializeField] ParticleSystem muzzleFlash;
 
     private float nextFireTime;
     public int CurrentRounds;
@@ -20,7 +19,6 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
-        TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         cameraAnimation = GameObject.Find("CameraAnimator").GetComponent<CameraAnimation>();
         gunAnimator = GetComponent<GunAnimator>();
         nextFireTime = 0;
@@ -58,7 +56,7 @@ public class Gun : MonoBehaviour
         cameraAnimation.CameraShake();
 
         gunAnimator.UpdateKickBack(gunData.kickBackAmt);
-
+        muzzleFlash.Play();
         if (Physics.Raycast(ray, out RaycastHit hitInfo, float.MaxValue))
         {
             Debug.Log(hitInfo.point);
@@ -77,47 +75,5 @@ public class Gun : MonoBehaviour
         }
     }
 
-    private IEnumerator PlayTrail(Vector3 StartPos, Vector3 EndPos, RaycastHit Hit)
-    {
-        TrailRenderer instance = TrailPool.Get();
-        instance.gameObject.SetActive(true);
-        yield return null;
-
-        instance.emitting = true;
-        float distance = Vector3.Distance(StartPos, EndPos);
-        float remainingDist = distance;
-        while (remainingDist > 0.0f)
-        {
-            instance.transform.position = Vector3.Lerp(StartPos, EndPos, Mathf.Clamp01(1 - (remainingDist / distance)));
-            yield return null;
-        }
-
-        instance.transform.position = EndPos;
-
-        if (Hit.collider != null)
-        {
-            //Do impact effect
-        }
-
-        yield return new WaitForSeconds(bulletTrail.Duration);
-        instance.emitting = false;
-        instance.gameObject.SetActive(false);
-        TrailPool.Release(instance);
-    }
-
-    private TrailRenderer CreateTrail()
-    {
-        GameObject instance = new GameObject("Bullet Trail");
-        TrailRenderer trail = instance.AddComponent<TrailRenderer>();
-        trail.colorGradient = bulletTrail.color;
-        trail.material = bulletTrail.material;
-        trail.widthCurve = bulletTrail.WidthCurve;
-        trail.time = bulletTrail.Duration;
-        trail.minVertexDistance = bulletTrail.MinVertexDistance;
-
-        trail.emitting = false;
-        trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-
-        return trail;
-    }
+    
 }

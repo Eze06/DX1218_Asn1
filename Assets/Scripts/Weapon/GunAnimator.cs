@@ -102,29 +102,8 @@ public class GunAnimator : MonoBehaviour
 
         swayRotation = new Vector3(invertLook.y, invertLook.x, invertLook.x);
     }
-
-    public void BobOffset(Vector3 moveSpeed, bool isGrounded, Vector3 moveInput)
+    public void gunBob()
     {
-        if (!doWeaponBobbing)
-            return;
 
-        speedCurve += Time.deltaTime * (isGrounded ? (moveSpeed.x + moveSpeed.z) * 10f : 1f) + 0.01f;
-
-        bobPos.x = (curveCos * bobLimit.x * (isGrounded ? 1 : 0)) - (moveInput.x * travelLimit.x);
-
-        bobPos.y = (curveSin * bobLimit.y) - (moveSpeed.y * travelLimit.y);
-
-        bobPos.z = -(moveInput.y * travelLimit.z);
-    }
-    
-    public void BobRotation(Vector3 moveInput)
-    {
-        if (!doWeaponBobbing)
-            return;
-
-        bobRotation.x = (moveInput != Vector3.zero ? bobRotMult.x * (Mathf.Sin(2 * speedCurve)) : bobRotMult.x * (Mathf.Sin(2 * speedCurve) / 2));
-
-        bobRotation.y = (moveInput != Vector3.zero ? bobRotMult.y * curveCos : 0);
-        bobRotation.z = (moveInput != Vector3.zero ? bobRotMult.z * curveCos * moveInput.x : 0);
     }
 }

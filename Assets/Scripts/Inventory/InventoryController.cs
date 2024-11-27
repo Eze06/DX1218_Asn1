@@ -41,7 +41,6 @@ public class InventoryController : MonoBehaviour
         CurrentGun.gunAnimator.Sway(playerController.mouseDelta);
         CurrentGun.gunAnimator.SwayRotation(playerController.mouseDelta);
 
-        CurrentGun.gunAnimator.BobOffset(playerController.moveDir + playerController.jumpVelocity, playerController.characterController.isGrounded, playerController.moveDir);
     }
 
 
