@@ -59,7 +59,10 @@ public class Gun : MonoBehaviour
         muzzleFlash.Play();
         if (Physics.Raycast(ray, out RaycastHit hitInfo, float.MaxValue))
         {
-            Debug.Log(hitInfo.point);
+            if(hitInfo.collider.GetComponent<Surface>())
+            {
+                SurfaceManager.Instance.DoSurfaceEffect(hitInfo.collider.GetComponent<Surface>(), hitInfo.point, hitInfo.normal);
+            }
         }
 
         Debug.DrawLine(fpsCamera.transform.position, hitInfo.point, Color.red);
