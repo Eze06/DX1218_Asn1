@@ -8,7 +8,9 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private CharacterController characterController;
+    [HideInInspector] public CharacterController characterController;
+    private CameraAnimation cameraAnimation;
+
     //Input Actions
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -41,23 +43,19 @@ public class PlayerController : MonoBehaviour
     private float normalHeight;
 
     //Camera
-    private Vector2 mouseDelta;
+    [HideInInspector] public Vector2 mouseDelta;
     private float cameraPitch;
     private float sprintFOV;
     private float normalFOV;
     private float currentFOV;
 
-    //Camera Bob
-    private float originalCameraY;
-    private float timer;
-    private float bobbingOffset;
 
 
     //Player Movement
-    private Vector3 moveDir;
+    [HideInInspector] public Vector3 moveDir;
 
     //Jump
-    private Vector3 jumpVelocity;
+    [HideInInspector] public Vector3 jumpVelocity;
 
     //Sprint
     private bool isSprinting;
@@ -73,6 +71,7 @@ public class PlayerController : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
+        cameraAnimation = GameObject.Find("CameraAnimator").GetComponent<CameraAnimation>();
 
         moveAction = playerInput.actions["Movement"];
         jumpAction = playerInput.actions["Jump"];
@@ -82,10 +81,6 @@ public class PlayerController : MonoBehaviour
         shootAction = playerInput.actions["Shoot"];
 
         normalHeight = characterController.height;
-
-        originalCameraY = Camera.main.transform.localPosition.y;
-        timer = 0f;
-        bobbingOffset = 0f;
 
         currentFOV = normalFOV = Camera.main.fieldOfView;
         sprintFOV = normalFOV * sprintFOVMultiplier;
@@ -114,7 +109,16 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        HandleCameraBob();
+        if (characterController.isGrounded == false)
+            return;
+
+        bool isMoving = moveDir.magnitude > 0;
+        
+        if(isMoving)
+        {
+            cameraAnimation.HeadBob(currentSpeedMultiplier);
+        }
+
         HandleCameraPitch();
         HandleCameraFOV();
     }
@@ -155,27 +159,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleCameraBob()
-    {
-        if (!characterController.isGrounded) return;
-
-        Transform cameraTransform = Camera.main.transform;
-
-        bool isMoving = moveDir.magnitude > 0;
-
-        if(isMoving)
-        {
-            timer += Time.deltaTime * bobFrequency * currentSpeedMultiplier;
-                
-            bobbingOffset = Mathf.Sin(timer) * bobAmplitude;
-        }
-        else
-        {
-            bobbingOffset = Mathf.Lerp(bobbingOffset, 0, Time.deltaTime);
-        }
-
-        cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, originalCameraY + bobbingOffset, cameraTransform.localPosition.z);
-    }
 
     private void HandleSprint()
     {

@@ -15,16 +15,17 @@ public class Gun : MonoBehaviour
     private float nextFireTime;
     public int CurrentRounds;
 
-    private CameraRecoil camRecoil;
-    private GunAnimator gunAnimator;
+    private CameraAnimation cameraAnimation;
+    [HideInInspector] public GunAnimator gunAnimator;
 
     private void Awake()
     {
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
-        camRecoil = GameObject.Find("CameraRecoil").GetComponent<CameraRecoil>();
+        cameraAnimation = GameObject.Find("CameraAnimator").GetComponent<CameraAnimation>();
         gunAnimator = GetComponent<GunAnimator>();
         nextFireTime = 0;
     }
+
 
     public void SwitchFireMode()
     {
@@ -50,16 +51,20 @@ public class Gun : MonoBehaviour
         Ray ray = fpsCamera.ViewportPointToRay(
         new Vector3(0.5f, 0.5f, 0.0f));
 
-        camRecoil.RecoilFire(gunData.Spread);
-        camRecoil.snappiness = gunData.snappiness;
-        camRecoil.returnSpeed = gunData.returnSpeed;
+        cameraAnimation.RecoilFire(gunData.Spread);
+        cameraAnimation.snappiness = gunData.snappiness;
+        cameraAnimation.returnSpeed = gunData.returnSpeed;
+
+        cameraAnimation.CameraShake();
 
         gunAnimator.UpdateKickBack(gunData.kickBackAmt);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, float.MaxValue))
         {
             Debug.Log(hitInfo.point);
-        }        
+        }
+
+        Debug.DrawLine(fpsCamera.transform.position, hitInfo.point, Color.red);
     }
 
     public void Burst(Camera fpsCamera)

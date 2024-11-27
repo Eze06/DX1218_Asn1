@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.EventSystems;
 
 [Serializable]
 public class InventoryAmmo
@@ -37,6 +38,10 @@ public class InventoryController : MonoBehaviour
     private void Update()
     {
         HandleSooting();
+        CurrentGun.gunAnimator.Sway(playerController.mouseDelta);
+        CurrentGun.gunAnimator.SwayRotation(playerController.mouseDelta);
+
+        CurrentGun.gunAnimator.BobOffset(playerController.moveDir + playerController.jumpVelocity, playerController.characterController.isGrounded, playerController.moveDir);
     }
 
 
@@ -54,6 +59,14 @@ public class InventoryController : MonoBehaviour
                     if(playerController.shootAction.IsPressed())
                     {
                         CurrentGun.Shoot(FPSCamera);
+                        CurrentGun.gunAnimator.doWeaponSway = false;
+                        CurrentGun.gunAnimator.doWeaponBobbing = false;
+                    }
+                    else
+                    {
+                        CurrentGun.gunAnimator.doWeaponSway = true;
+                        CurrentGun.gunAnimator.doWeaponBobbing = true;
+
                     }
                     break;
 
