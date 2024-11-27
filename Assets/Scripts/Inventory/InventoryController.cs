@@ -70,6 +70,21 @@ public class InventoryController : MonoBehaviour
                     break;
 
                 case GunData.ShootMode.BURST:
+
+                    if (playerController.shootAction.IsPressed())
+                    {
+                        StartCoroutine(CurrentGun.Burst(FPSCamera));
+                        CurrentGun.gunAnimator.doWeaponSway = false;
+                        CurrentGun.gunAnimator.doWeaponBobbing = false;
+                    }
+                    else
+                    {
+                        CurrentGun.gunAnimator.doWeaponSway = true;
+                        CurrentGun.gunAnimator.doWeaponBobbing = true;
+
+                    }
+                    break;
+
                     break;
                 case GunData.ShootMode.SINGLE:
                     break;

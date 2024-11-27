@@ -61,6 +61,8 @@ public class GunData : ScriptableObject
 
     [Header("Burst Fire")]
     public int BulletsPerBurst;
+    [Range(0,0.2f)]
+    public float TimeBetweenBurst;
 
     [Header("Magazine Variables")]
     public AmmoData ammoData;

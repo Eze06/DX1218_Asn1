@@ -23,11 +23,11 @@ public class SurfaceManager : MonoBehaviour
 
     public void DoSurfaceEffect(Surface surface, Vector3 hitPoint, Vector3 normal)
     {
-        if(surface.impactEffect != null)
+        if(surface.surfaceSO.impactEffect != null)
         {
             //Spawn Impact effect at hitlocation
-            GameObject TempBullet = ObjectPoolManager.SpawnObject(surface.impactEffect, hitPoint, Quaternion.LookRotation(normal));
-            StartCoroutine(ReleaseSurfaceEffect(TempBullet, surface.impactEffectDuration));
+            GameObject TempBullet = ObjectPoolManager.SpawnObject(surface.surfaceSO.impactEffect, hitPoint, Quaternion.LookRotation(normal));
+            StartCoroutine(ReleaseSurfaceEffect(TempBullet, surface.surfaceSO.impactEffectDuration));
         }
     }
 

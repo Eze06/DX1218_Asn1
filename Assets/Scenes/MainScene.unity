@@ -1371,9 +1371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 456d6806652e46a479c21ba0b326a1eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impactEffect: {fileID: 7155975023241629935, guid: e10801c26eac3c44abad1a9859d4abe2,
-    type: 3}
-  impactEffectDuration: 2
+  surfaceSO: {fileID: 11400000, guid: ff061d51e4fd97144bf2907bf0944aac, type: 2}
 --- !u!1 &33136130
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,9 +2000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 456d6806652e46a479c21ba0b326a1eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impactEffect: {fileID: 7155975023241629935, guid: e10801c26eac3c44abad1a9859d4abe2,
-    type: 3}
-  impactEffectDuration: 2
+  surfaceSO: {fileID: 11400000, guid: ff061d51e4fd97144bf2907bf0944aac, type: 2}
 --- !u!1 &1421200266
 GameObject:
   m_ObjectHideFlags: 0

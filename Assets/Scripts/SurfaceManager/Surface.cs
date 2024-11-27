@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Surface : MonoBehaviour
 {
-    public GameObject impactEffect;
-    public float impactEffectDuration = 2f;
+    public SurfaceSO surfaceSO;
     //TODO: Create audio
     
-
 }

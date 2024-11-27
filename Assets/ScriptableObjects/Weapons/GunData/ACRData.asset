@@ -27,6 +27,7 @@ MonoBehaviour:
   returnSpeed: 2
   snappiness: 6
   kickBackAmt: 0.1
-  BulletsPerBurst: 0
+  BulletsPerBurst: 3
+  TimeBetweenBurst: 0.101
   ammoData: {fileID: 0}
   RoundsPerMag: 30

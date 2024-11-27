@@ -10,18 +10,22 @@ public class Gun : MonoBehaviour
     ObjectPool<GameObject> TrailPool;
 
     [SerializeField] ParticleSystem muzzleFlash;
-
+    [SerializeField] Transform adsPoint;
     private float nextFireTime;
     public int CurrentRounds;
 
     private CameraAnimation cameraAnimation;
     [HideInInspector] public GunAnimator gunAnimator;
+    
+
+    bool doneBurst;
 
     private void Awake()
     {
         cameraAnimation = GameObject.Find("CameraAnimator").GetComponent<CameraAnimation>();
         gunAnimator = GetComponent<GunAnimator>();
         nextFireTime = 0;
+        doneBurst = true;
     }
 
 
@@ -39,9 +43,9 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public void Shoot(Camera fpsCamera)
+    public void Shoot(Camera fpsCamera, bool burst = false)
     {
-        if (Time.time <= nextFireTime)
+        if (Time.time <= nextFireTime && !burst)
             return;
 
         nextFireTime = Time.time + gunData.FireRate;
@@ -65,18 +69,27 @@ public class Gun : MonoBehaviour
             }
         }
 
-        Debug.DrawLine(fpsCamera.transform.position, hitInfo.point, Color.red);
     }
 
-    public void Burst(Camera fpsCamera)
+    public IEnumerator Burst(Camera fpsCamera)
     {
-        for(int i = 0; i < gunData.BulletsPerBurst;i++)
-        {
-            if (CurrentRounds <= 0)
-                break;   
 
+        if (Time.time <= nextFireTime || !doneBurst)
+            yield break;
+        nextFireTime += Time.time + gunData.FireRate / 2f  ;
+
+        for (int i = 0; i < gunData.BulletsPerBurst;i++)
+        {
+            doneBurst = false;  
+            //if (CurrentRounds <= 0)
+            //    break;
+
+            Shoot(fpsCamera , burst: true);
+            yield return new WaitForSeconds(gunData.TimeBetweenBurst);
+            
         }
+        doneBurst = true;
     }
 
-    
+
 }
