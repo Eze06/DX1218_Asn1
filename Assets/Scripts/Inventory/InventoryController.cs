@@ -38,11 +38,23 @@ public class InventoryController : MonoBehaviour
     private void Update()
     {
         HandleSooting();
+        HandleFireModeSwitch();
         CurrentGun.gunAnimator.Sway(playerController.mouseDelta);
         CurrentGun.gunAnimator.SwayRotation(playerController.mouseDelta);
 
     }
 
+    public void HandleFireModeSwitch()
+    {
+        if (CurrentGun == null)
+            return;
+
+        if(playerController.switchFireModeAction.WasPressedThisFrame())
+        {
+            CurrentGun.SwitchFireMode();
+            Debug.Log("switch fire mode");
+        }
+    }
 
     public void HandleSooting()
     {
@@ -85,7 +97,6 @@ public class InventoryController : MonoBehaviour
                     }
                     break;
 
-                    break;
                 case GunData.ShootMode.SINGLE:
                     break;
                 case GunData.ShootMode.SHOTGUN:
@@ -97,8 +108,33 @@ public class InventoryController : MonoBehaviour
             switch (CurrentGun.gunData.secondaryShootMode)
             {
                 case GunData.ShootMode.AUTO:
+                    if (playerController.shootAction.IsPressed())
+                    {
+                        CurrentGun.Shoot(FPSCamera);
+                        CurrentGun.gunAnimator.doWeaponSway = false;
+                        CurrentGun.gunAnimator.doWeaponBobbing = false;
+                    }
+                    else
+                    {
+                        CurrentGun.gunAnimator.doWeaponSway = true;
+                        CurrentGun.gunAnimator.doWeaponBobbing = true;
+
+                    }
+
                     break;
                 case GunData.ShootMode.BURST:
+                    if (playerController.shootAction.IsPressed())
+                    {
+                        StartCoroutine(CurrentGun.Burst(FPSCamera));
+                        CurrentGun.gunAnimator.doWeaponSway = false;
+                        CurrentGun.gunAnimator.doWeaponBobbing = false;
+                    }
+                    else
+                    {
+                        CurrentGun.gunAnimator.doWeaponSway = true;
+                        CurrentGun.gunAnimator.doWeaponBobbing = true;
+
+                    }
                     break;
                 case GunData.ShootMode.SINGLE:
                     break;

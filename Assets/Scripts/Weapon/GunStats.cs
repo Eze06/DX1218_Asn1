@@ -69,5 +69,9 @@ public class GunData : ScriptableObject
     public int RoundsPerMag = 30;
 
 
+    private void OnEnable()
+    {
+        fireMode = FireMode.PRIMARY_FIRE;
+    }
 
 }

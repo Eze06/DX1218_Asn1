@@ -19,7 +19,7 @@ MonoBehaviour:
   weaponType: 0
   droppablePrefab: {fileID: 0}
   FireRate: 0.25
-  primaryShootMode: 0
+  primaryShootMode: 1
   secondaryShootMode: 0
   weaponShootType: 0
   fireMode: 0

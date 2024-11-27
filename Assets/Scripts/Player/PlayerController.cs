@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private InputAction sprintAction;
     private InputAction crouchAction;
     [HideInInspector] public InputAction shootAction;
+    [HideInInspector] public InputAction switchFireModeAction;
 
 
     [Header("Movement Variables")]
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
         sprintAction = playerInput.actions["Sprint"];
         crouchAction = playerInput.actions["Crouch"];
         shootAction = playerInput.actions["Shoot"];
-
+        switchFireModeAction = playerInput.actions["SwitchFireMode"];
         normalHeight = characterController.height;
 
         currentFOV = normalFOV = Camera.main.fieldOfView;
