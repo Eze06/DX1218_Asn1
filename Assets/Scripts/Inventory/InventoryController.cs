@@ -39,9 +39,27 @@ public class InventoryController : MonoBehaviour
     {
         HandleSooting();
         HandleFireModeSwitch();
+        HandleADS();
         CurrentGun.gunAnimator.Sway(playerController.mouseDelta);
         CurrentGun.gunAnimator.SwayRotation(playerController.mouseDelta);
 
+    }
+
+    public void HandleADS()
+    {
+        if (CurrentGun == null)
+            return;
+
+        if(playerController.ADSAction.IsPressed())
+        {
+            CurrentGun.gunAnimator.doKickBack = false;
+            CurrentGun.ADS();
+        }
+        else
+        {
+            CurrentGun.gunAnimator.doKickBack = true;
+            CurrentGun.gunAnimator.DoADS = false;
+        }
     }
 
     public void HandleFireModeSwitch()

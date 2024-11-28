@@ -9,11 +9,12 @@ using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 [DisallowMultipleComponent]
 public class GunAnimator : MonoBehaviour
 {
-
+    public bool doKickBack = true;
     [SerializeField] private Transform weaponParent;
     private Vector3 kickBackEndPos;
     private Vector3 currentKickBackPos;
 
+    private Vector3 startingPos;
 
     [Header("Kickback Variables")]
     [SerializeField]private float kickBackReturnSpeed = 2;
@@ -50,10 +51,34 @@ public class GunAnimator : MonoBehaviour
     private Vector3 currentBobPos;
     private Quaternion currentBobRot;
 
+    [Header("ADS Variables")]
+    public bool DoADS = false;
+    [SerializeField] private Transform adsPoint;
+    [SerializeField] private Transform adsTarget;
+    private Vector3 targetADSpoint;
+    private Vector3 currentADSpoint;
+    private Vector3 weaponFromADSTarget;
+    [SerializeField] private float adsSpeed;
+
+    private void Awake()
+    {
+        doKickBack = true;
+        startingPos = weaponParent.localPosition;
+        Vector3 weaponFromADSPoint = adsPoint.position - transform.position;
+        weaponFromADSTarget = adsTarget.position - transform.position - weaponFromADSPoint;
+
+    }
+
     private void Update()
     {
-        kickBackEndPos = Vector3.Lerp(kickBackEndPos, Vector3.zero, kickBackReturnSpeed * Time.deltaTime);
-        currentKickBackPos = Vector3.Slerp(currentKickBackPos, kickBackEndPos, kickBackSnappiness * Time.deltaTime);
+        
+        if (doKickBack)
+        {
+            kickBackEndPos = Vector3.Lerp(kickBackEndPos, Vector3.zero, kickBackReturnSpeed * Time.deltaTime);
+            currentKickBackPos = Vector3.Slerp(currentKickBackPos, kickBackEndPos, kickBackSnappiness * Time.deltaTime);
+        }
+
+
         if (doWeaponSway)
         {
             currentSwayPos = Vector3.Lerp(currentSwayPos, swayPos, Time.deltaTime * swaySmooth);
@@ -65,14 +90,28 @@ public class GunAnimator : MonoBehaviour
             currentBobRot = Quaternion.Slerp(currentBobRot, Quaternion.Euler(bobRotation), Time.deltaTime * smoothRot);
         }
 
-        weaponParent.localPosition = currentKickBackPos + currentSwayPos + currentBobPos;
+        targetADSpoint = Vector3.Lerp(targetADSpoint, startingPos, Time.deltaTime * adsSpeed);
+        Debug.Log(targetADSpoint);
+        currentADSpoint = Vector3.Slerp(currentADSpoint, targetADSpoint, Time.deltaTime * adsSpeed);
+
+
+        weaponParent.localPosition = currentKickBackPos + currentSwayPos + currentBobPos + currentADSpoint;
         weaponParent.localRotation = currentSwayRotation * currentBobRot;
 
-
-
     }
+
+    public void ADS()
+    {
+        DoADS = true;
+        Debug.Log(weaponFromADSTarget);
+        targetADSpoint = weaponFromADSTarget;
+        currentKickBackPos = Vector3.zero;
+    }
+
     public void UpdateKickBack(float kickBackAmount)
     {
+        if (!doKickBack)
+            return;
         kickBackEndPos += new Vector3(0,0f, -kickBackAmount);
 
     }
@@ -102,8 +141,5 @@ public class GunAnimator : MonoBehaviour
 
         swayRotation = new Vector3(invertLook.y, invertLook.x, invertLook.x);
     }
-    public void gunBob()
-    {
 
-    }
 }

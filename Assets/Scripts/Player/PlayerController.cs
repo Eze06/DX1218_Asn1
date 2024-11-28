@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
+    
     private PlayerInput playerInput;
     [HideInInspector] public CharacterController characterController;
     private CameraAnimation cameraAnimation;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private InputAction crouchAction;
     [HideInInspector] public InputAction shootAction;
     [HideInInspector] public InputAction switchFireModeAction;
+    [HideInInspector] public InputAction ADSAction;
 
 
     [Header("Movement Variables")]
@@ -81,6 +83,8 @@ public class PlayerController : MonoBehaviour
         crouchAction = playerInput.actions["Crouch"];
         shootAction = playerInput.actions["Shoot"];
         switchFireModeAction = playerInput.actions["SwitchFireMode"];
+        ADSAction = playerInput.actions["ADS"];
+
         normalHeight = characterController.height;
 
         currentFOV = normalFOV = Camera.main.fieldOfView;

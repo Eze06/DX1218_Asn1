@@ -10,7 +10,6 @@ public class Gun : MonoBehaviour
     ObjectPool<GameObject> TrailPool;
 
     [SerializeField] ParticleSystem muzzleFlash;
-    [SerializeField] Transform adsPoint;
     private float nextFireTime;
     public int CurrentRounds;
 
@@ -28,6 +27,10 @@ public class Gun : MonoBehaviour
         doneBurst = true;
     }
 
+    public void ADS()
+    {
+        gunAnimator.ADS();
+    }
 
     public void SwitchFireMode()
     {
