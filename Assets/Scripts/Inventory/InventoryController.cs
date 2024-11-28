@@ -127,14 +127,14 @@ public class InventoryController : MonoBehaviour
     private void HandlePickUp()
     {
 
-        
-        if(Physics.Raycast(FPSCamera.transform.position, FPSCamera.transform.forward, out RaycastHit hitinfo, PickupRange,LayerMask.GetMask("DroppedWeapon")))
+        if(Physics.Raycast(FPSCamera.transform.position, FPSCamera.transform.forward, out RaycastHit hitinfo, PickupRange))
         {
-            if(hitinfo.collider.GetComponent<Pickup>())
+            if (hitinfo.collider.GetComponent<Pickup>())
             {
-                Debug.Log("Can Pick Up");
+                
             }
         }
+        
 
     }
 

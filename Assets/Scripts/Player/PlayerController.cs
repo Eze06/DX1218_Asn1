@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public InputAction switchFireModeAction;
     [HideInInspector] public InputAction ADSAction;
     [HideInInspector] public InputAction DropAction;
+    [HideInInspector] public InputAction SelectPrimaryAction;
+    [HideInInspector] public InputAction SelectSecondaryAction;
+    [HideInInspector] public InputAction InteractAction;
 
 
     [Header("Movement Variables")]
@@ -84,6 +87,9 @@ public class PlayerController : MonoBehaviour
         switchFireModeAction = playerInput.actions["SwitchFireMode"];
         ADSAction = playerInput.actions["ADS"];
         DropAction = playerInput.actions["Drop"];
+        SelectPrimaryAction = playerInput.actions["SelectPrimary"];
+        SelectSecondaryAction = playerInput.actions["SelectSecondary"];
+        InteractAction = playerInput.actions["Interact"];
 
         normalHeight = characterController.height;
 
