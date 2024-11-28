@@ -16,11 +16,12 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction lookAction;
-    private InputAction sprintAction;
+    [HideInInspector] public InputAction sprintAction;
     private InputAction crouchAction;
     [HideInInspector] public InputAction shootAction;
     [HideInInspector] public InputAction switchFireModeAction;
     [HideInInspector] public InputAction ADSAction;
+    [HideInInspector] public InputAction DropAction;
 
 
     [Header("Movement Variables")]
@@ -48,9 +49,7 @@ public class PlayerController : MonoBehaviour
     //Camera
     [HideInInspector] public Vector2 mouseDelta;
     private float cameraPitch;
-    private float sprintFOV;
-    private float normalFOV;
-    private float currentFOV;
+
 
 
 
@@ -61,9 +60,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector3 jumpVelocity;
 
     //Sprint
-    private bool isSprinting;
+    [HideInInspector] public bool isSprinting;
     private float speed;
-    private float currentSpeedMultiplier;
+    [HideInInspector] public float currentSpeedMultiplier;
 
 
     // Start is called before the first frame update
@@ -84,11 +83,11 @@ public class PlayerController : MonoBehaviour
         shootAction = playerInput.actions["Shoot"];
         switchFireModeAction = playerInput.actions["SwitchFireMode"];
         ADSAction = playerInput.actions["ADS"];
+        DropAction = playerInput.actions["Drop"];
 
         normalHeight = characterController.height;
 
-        currentFOV = normalFOV = Camera.main.fieldOfView;
-        sprintFOV = normalFOV * sprintFOVMultiplier;
+
     }
 
     // Update is called once per frame
@@ -125,7 +124,6 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleCameraPitch();
-        HandleCameraFOV();
     }
 
     private void LookX()
@@ -173,10 +171,12 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeedMultiplier = sprintSpeedMult;
             isSprinting = true;
+            cameraAnimation.zoomSprint = true;
         }
         else
         {
             currentSpeedMultiplier = walkSpeedMult;
+            cameraAnimation.zoomSprint = false;
             isSprinting = false;
         }
 
@@ -197,17 +197,5 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void HandleCameraFOV()
-    {
-        if(isSprinting)
-        {
-            currentFOV = Mathf.Lerp(currentFOV, sprintFOV, moveSpeedTransition * Time.deltaTime);
-        }
-        else
-        {
-            currentFOV = Mathf.Lerp(currentFOV, normalFOV, moveSpeedTransition * Time.deltaTime);
-        }
 
-        Camera.main.fieldOfView = currentFOV;
-    }
 }

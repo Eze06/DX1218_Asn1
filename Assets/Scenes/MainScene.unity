@@ -2177,15 +2177,13 @@ MonoBehaviour:
   maxStepDistance: 0.1
   rotationStep: 0.005
   maxRotationStepDistance: 0.1
-  doWeaponBobbing: 1
-  speedCurve: 0
-  travelLimit: {x: 0.025, y: 0.0025, z: 0.025}
-  bobLimit: {x: 0.01, y: 0.01, z: 0.01}
-  bobRotMult: {x: 0.01, y: 0.01, z: 0.01}
   DoADS: 0
   adsPoint: {fileID: 1307065604}
   adsTarget: {fileID: 1716400808}
   adsSpeed: 4
+  doSprint: 0
+  SprintRotationTarget: {x: 3, y: -25, z: 16}
+  transToSprintSpeed: 5
 --- !u!1 &1588283511
 GameObject:
   m_ObjectHideFlags: 0
@@ -2375,13 +2373,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1716400807}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.176, y: 0, z: 0.257}
+  m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
+  m_LocalPosition: {x: -0.163, y: 0.01, z: 0.257}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7202193381321740785}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 60, z: 0}
 --- !u!43 &1747834091
 Mesh:
   m_ObjectHideFlags: 0
@@ -2809,6 +2807,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
+  sprintAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 463276ba-e2e0-4854-9725-fda4c10dab28
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   shootAction:
     m_Name: 
     m_Type: 0
@@ -2836,6 +2843,15 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  DropAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 8926fcf9-0bc6-4ffd-b14f-7f71a98a29de
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   moveSpeed: 5
   walkSpeedMult: 1
   sprintSpeedMult: 2
@@ -2851,6 +2867,8 @@ MonoBehaviour:
   mouseDelta: {x: 0, y: 0}
   moveDir: {x: 0, y: 0, z: 0}
   jumpVelocity: {x: 0, y: 0, z: 0}
+  isSprinting: 0
+  currentSpeedMultiplier: 0
 --- !u!114 &2005606474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2922,6 +2940,10 @@ MonoBehaviour:
   traumaMag: 0.8
   bobFreq: 10
   bobAmp: 0.00231
+  zoomSprint: 0
+  zoomADS: 0
+  sprintFOVMultiplier: 0.8
+  ADSFOVMultiplier: 0.5
 --- !u!4 &2110919789 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 865689320124184929, guid: 7ba5cd80fbe31da4cacda3d4a5bdbcff,
@@ -3253,6 +3275,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AWP
       objectReference: {fileID: 0}
+    - target: {fileID: 3505539413941851300, guid: 78ffe95ec559a124dbbb5b8a7df4d461,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3593489290103599673, guid: 78ffe95ec559a124dbbb5b8a7df4d461,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3420,7 +3447,7 @@ PrefabInstance:
     - target: {fileID: 1067888839342255546, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
@@ -3430,17 +3457,17 @@ PrefabInstance:
     - target: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.06
+      value: -0.02027607
       objectReference: {fileID: 0}
     - target: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.15
+      value: -0.11372644
       objectReference: {fileID: 0}
     - target: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.65
+      value: 0.68941593
       objectReference: {fileID: 0}
     - target: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}
@@ -3523,7 +3550,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1928024899}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1067888839342255158, guid: e3a08dbe50a1d394a859296aef687391, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1067888839342616986, guid: e3a08dbe50a1d394a859296aef687391,
         type: 3}

@@ -17,10 +17,11 @@ MonoBehaviour:
     m_Bits: 4294967295
   gunName: ACR
   weaponType: 0
-  droppablePrefab: {fileID: 0}
+  droppablePrefab: {fileID: 7520714163765841058, guid: fe09733f86e47d445be120d8e3889e57,
+    type: 3}
   FireRate: 0.25
   primaryShootMode: 1
-  secondaryShootMode: 0
+  secondaryShootMode: 2
   weaponShootType: 0
   fireMode: 0
   Spread: {x: -6, y: 3, z: 0.35}
@@ -29,5 +30,5 @@ MonoBehaviour:
   kickBackAmt: 0.1
   BulletsPerBurst: 3
   TimeBetweenBurst: 0.101
-  ammoData: {fileID: 0}
+  ammoData: {fileID: 11400000, guid: a389b53e98a8d384faca19758cb308c0, type: 2}
   RoundsPerMag: 30

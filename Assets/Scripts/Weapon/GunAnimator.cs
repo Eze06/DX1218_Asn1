@@ -35,21 +35,8 @@ public class GunAnimator : MonoBehaviour
     float swaySmooth = 10f;
     float smoothRot = 12f;
 
-    [Header("Weapon Bobbng Variable")]
-    public bool doWeaponBobbing = true;
-    public float speedCurve; 
 
-    private float curveSin { get => Mathf.Sin(speedCurve); }
-    private float curveCos { get => Mathf.Cos(speedCurve); }
 
-    [SerializeField] private Vector3 travelLimit = Vector3.one * 0.025f;
-    [SerializeField] private Vector3 bobLimit = Vector3.one * 0.1f;
-    [SerializeField] private Vector3 bobRotMult;
-
-    private Vector3 bobPos;
-    private Vector3 bobRotation;
-    private Vector3 currentBobPos;
-    private Quaternion currentBobRot;
 
     [Header("ADS Variables")]
     public bool DoADS = false;
@@ -60,13 +47,21 @@ public class GunAnimator : MonoBehaviour
     private Vector3 weaponFromADSTarget;
     [SerializeField] private float adsSpeed;
 
+    [Header("Sprint Variable")]
+    public bool doSprint;
+    [SerializeField] private Vector3 SprintRotationTarget;
+    private Quaternion CurrentSprintRotation;
+    [SerializeField] private float transToSprintSpeed = 5f;
+
+    private Vector3 bobPos;
+    private Vector3 currentBobPos;
+
     private void Awake()
     {
         doKickBack = true;
         startingPos = weaponParent.localPosition;
         Vector3 weaponFromADSPoint = adsPoint.position - transform.position;
         weaponFromADSTarget = adsTarget.position - transform.position - weaponFromADSPoint;
-
     }
 
     private void Update()
@@ -84,19 +79,22 @@ public class GunAnimator : MonoBehaviour
             currentSwayPos = Vector3.Lerp(currentSwayPos, swayPos, Time.deltaTime * swaySmooth);
             currentSwayRotation = Quaternion.Slerp(currentSwayRotation, Quaternion.Euler(swayRotation), Time.deltaTime * smoothRot);
         }
-        if(doWeaponBobbing)
+
+        if(doSprint)
         {
-            currentBobPos = Vector3.Lerp(currentBobPos, bobPos, Time.deltaTime * swaySmooth);
-            currentBobRot = Quaternion.Slerp(currentBobRot, Quaternion.Euler(bobRotation), Time.deltaTime * smoothRot);
+            CurrentSprintRotation = Quaternion.Slerp(CurrentSprintRotation, Quaternion.Euler(SprintRotationTarget), Time.deltaTime * transToSprintSpeed);
+        }
+        else
+        {
+            CurrentSprintRotation = Quaternion.Slerp(CurrentSprintRotation, Quaternion.Euler(Vector3.zero), Time.deltaTime * transToSprintSpeed);
         }
 
         targetADSpoint = Vector3.Lerp(targetADSpoint, startingPos, Time.deltaTime * adsSpeed);
-        Debug.Log(targetADSpoint);
         currentADSpoint = Vector3.Slerp(currentADSpoint, targetADSpoint, Time.deltaTime * adsSpeed);
 
 
         weaponParent.localPosition = currentKickBackPos + currentSwayPos + currentBobPos + currentADSpoint;
-        weaponParent.localRotation = currentSwayRotation * currentBobRot;
+        weaponParent.localRotation = currentSwayRotation * CurrentSprintRotation;
 
     }
 
@@ -139,7 +137,17 @@ public class GunAnimator : MonoBehaviour
         invertLook.x = Mathf.Clamp(invertLook.x, -maxRotationStepDistance, maxRotationStepDistance);
         invertLook.y = Mathf.Clamp(invertLook.y, -maxRotationStepDistance, maxRotationStepDistance);
 
+     
         swayRotation = new Vector3(invertLook.y, invertLook.x, invertLook.x);
+    }
+
+    public void GunBob(float bobFreq, float bobAmp, float frequencyMult)
+    {
+        Vector3 pos = Vector3.zero;
+        pos.y += Mathf.Sin(Time.time * bobFreq * frequencyMult) * bobAmp;
+        pos.x += Mathf.Cos(Time.time * bobFreq / 2 * frequencyMult) * bobAmp * 2;
+
+        weaponParent.transform.localPosition += pos;
     }
 
 }

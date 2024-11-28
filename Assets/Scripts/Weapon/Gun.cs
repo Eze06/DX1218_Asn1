@@ -13,7 +13,7 @@ public class Gun : MonoBehaviour
     private float nextFireTime;
     public int CurrentRounds;
 
-    private CameraAnimation cameraAnimation;
+    [HideInInspector] public CameraAnimation cameraAnimation;
     [HideInInspector] public GunAnimator gunAnimator;
     
 
@@ -44,6 +44,11 @@ public class Gun : MonoBehaviour
             gunData.fireMode = GunData.FireMode.PRIMARY_FIRE;
             return;
         }
+    }
+
+    public void gunBob(float moveSpeed)
+    {
+        gunAnimator.GunBob(cameraAnimation.bobFreq, cameraAnimation.bobAmp, moveSpeed);
     }
 
     public void Shoot(Camera fpsCamera, bool burst = false)
@@ -92,6 +97,13 @@ public class Gun : MonoBehaviour
             
         }
         doneBurst = true;
+    }
+
+    public void Drop(Transform FPSCamera)
+    {
+        GameObject droppableObject = Instantiate(gunData.droppablePrefab, FPSCamera.transform.position + FPSCamera.transform.forward * 1f, Quaternion.identity) ;
+        droppableObject.GetComponent<Rigidbody>().AddForce(FPSCamera.transform.forward * 5f,ForceMode.Impulse);
+        
     }
 
 
