@@ -22,5 +22,7 @@ public class AmmoData : ScriptableObject
     [Header("Projectile Varialbes")]
     public float ProjectileSpeed = 400f;
     public float ProjectileMass = 0f;
+    public float ImpactForce = 5f;
+    public GameObject bulletPrefab;
 
 }

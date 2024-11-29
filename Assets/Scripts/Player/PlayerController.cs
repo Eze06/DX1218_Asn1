@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public InputAction SelectPrimaryAction;
     [HideInInspector] public InputAction SelectSecondaryAction;
     [HideInInspector] public InputAction InteractAction;
+    [HideInInspector] public InputAction ReloadAction;
 
 
     [Header("Movement Variables")]
@@ -90,6 +91,7 @@ public class PlayerController : MonoBehaviour
         SelectPrimaryAction = playerInput.actions["SelectPrimary"];
         SelectSecondaryAction = playerInput.actions["SelectSecondary"];
         InteractAction = playerInput.actions["Interact"];
+        ReloadAction = playerInput.actions["Reload"];
 
         normalHeight = characterController.height;
 

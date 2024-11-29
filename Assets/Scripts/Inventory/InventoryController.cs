@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
 using Unity.PlasticSCM.Editor.WebApi;
+using System.Linq;
 
 [Serializable]
 public class InventoryAmmo
@@ -19,25 +20,31 @@ public class InventoryController : MonoBehaviour
 
     public List<Gun> GunList = new List<Gun>();
 
+    [SerializeField] List<Gun> GunsEquipped = new List<Gun>();
+
     public List<InventoryAmmo> AmmoList = new List<InventoryAmmo>();
 
     private PlayerController playerController;
 
     [SerializeField] private Camera FPSCamera;
 
-    [HideInInspector] public Gun CurrentGun;
+    public Gun CurrentGun;
 
-    private Gun PrimaryGun;
-    private Gun SecondaryGun;
+     public Gun PrimaryGun;
+     public Gun SecondaryGun;
 
     [Header("Pickup Variable")]
     [SerializeField] private float PickupRange = 3f;
 
-    private void Start()
+    private void Awake()
     {
         this.playerController = GetComponent<PlayerController>();
 
-        if(GunList == null)
+        foreach(Gun gun in GunList)
+        {
+            gun.Init();
+        }
+        if(GunsEquipped.Count == 0)
         {
             CurrentGun = null;
             PrimaryGun = null;
@@ -45,7 +52,7 @@ public class InventoryController : MonoBehaviour
         }
         else
         {
-            CurrentGun = GunList[0];
+            CurrentGun = GunsEquipped[0];
             if (CurrentGun.gunData.weaponType == GunData.WeaponType.PRIMARY)
             {
                 PrimaryGun = CurrentGun;
@@ -54,6 +61,19 @@ public class InventoryController : MonoBehaviour
             {
                 SecondaryGun = CurrentGun;
             }
+
+            CurrentGun = GunsEquipped[1];
+            if (CurrentGun.gunData.weaponType == GunData.WeaponType.PRIMARY)
+            {
+                PrimaryGun = CurrentGun;
+            }
+            else
+            {
+                SecondaryGun = CurrentGun;
+            }
+
+            CurrentGun.gameObject.SetActive(true);
+
         }
 
     }
@@ -70,12 +90,40 @@ public class InventoryController : MonoBehaviour
         HandleFireModeSwitch();
         HandleADS();
         HandleGunSprint();
+        HandleReload();
+
+
 
         CurrentGun.gunAnimator.Sway(playerController.mouseDelta);
         CurrentGun.gunAnimator.SwayRotation(playerController.mouseDelta);
 
+        if (playerController.SelectPrimaryAction.WasPressedThisFrame())
+        {
+            SelectPrimaryGun();
+        }
+        if (playerController.SelectSecondaryAction.WasPressedThisFrame())
+        {
+            SelectSecondaryGun();
+        }
+
         HandleDrop();
 
+    }
+
+    private void HandleReload()
+    {
+        if (playerController.ReloadAction.WasPressedThisFrame())
+        {
+            for(int i = 0; i < AmmoList.Count;i++)
+            {
+                if (AmmoList[i].ammoType == CurrentGun.gunData.ammoData)
+                {
+                    CurrentGun.Reload(AmmoList[i]);
+                    break;
+                }
+                continue;
+            }
+        }
     }
 
     private void HandleDrop()
@@ -94,7 +142,7 @@ public class InventoryController : MonoBehaviour
                 {
                     SecondaryGun.gameObject.SetActive(true);
 
-                    GunList.Remove(CurrentGun);
+                    GunsEquipped.Remove(CurrentGun);
                     CurrentGun = SecondaryGun;
                 }
                 else
@@ -109,7 +157,7 @@ public class InventoryController : MonoBehaviour
                 {
                     PrimaryGun.gameObject.SetActive(true);
 
-                    GunList.Remove(CurrentGun);
+                    GunsEquipped.Remove(CurrentGun);
                     CurrentGun = PrimaryGun;
                 }
                 else
@@ -119,23 +167,72 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    public void QuickSwitch()
-    {
-
-    }
-
     private void HandlePickUp()
     {
 
         if(Physics.Raycast(FPSCamera.transform.position, FPSCamera.transform.forward, out RaycastHit hitinfo, PickupRange))
         {
-            if (hitinfo.collider.GetComponent<Pickup>())
+            if (hitinfo.collider.GetComponent<Pickup>() && playerController.InteractAction.WasPressedThisFrame())
             {
-                
+                PickUpItem(hitinfo.collider.GetComponent<Pickup>());
             }
         }
         
+    }
+    
+    public void PickUpItem(Pickup itemToPickup)
+    {
+        if (itemToPickup.gunData != null)
+        {
+            Gun gunToPickup = null;
+            foreach(Gun guns in GunList)
+            {
+                if(guns.gunData == itemToPickup.gunData)
+                {
+                    gunToPickup = guns;
+                    break;
+                }
+            }
 
+            switch(gunToPickup.gunData.weaponType)
+            {
+                case GunData.WeaponType.PRIMARY:
+                    if (PrimaryGun == null)
+                    {
+                        PrimaryGun = gunToPickup;
+                        SelectPrimaryGun();
+                    }
+                    else
+                    {
+                        PrimaryGun.Drop(FPSCamera.transform);
+                    }
+                    break;
+
+                case GunData.WeaponType.SECONDARY:
+                    if (SecondaryGun == null)
+                    {
+                        SecondaryGun = gunToPickup;
+                        SelectSecondaryGun();
+                    }
+                    else
+                    {
+                        SecondaryGun.Drop(FPSCamera.transform);
+                    }
+                    break;
+            }
+
+            Destroy(itemToPickup.gameObject);
+
+            if (gunToPickup != null)
+                GunsEquipped.Add(gunToPickup);
+        }
+
+        else if (itemToPickup.ammoData != null)
+        {
+
+        }
+        else
+            return;
     }
 
     private void HandleGunSprint()
@@ -145,7 +242,7 @@ public class InventoryController : MonoBehaviour
             CurrentGun.gunAnimator.doSprint = true;
             if(playerController.characterController.isGrounded)
             {
-                CurrentGun.gunBob(playerController.currentSpeedMultiplier);
+                CurrentGun.GunBob(playerController.currentSpeedMultiplier);
             }
         }
         else
@@ -238,11 +335,26 @@ public class InventoryController : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log(CurrentGun.gunAnimator);
                         CurrentGun.gunAnimator.doWeaponSway = true;
 
                     }
                     break;
                 case GunData.ShootMode.SHOTGUN:
+
+                    if (playerController.shootAction.WasPressedThisFrame())
+                    {
+                        playerController.isSprinting = false;
+
+                        CurrentGun.ShotGunShot(FPSCamera);
+                        CurrentGun.gunAnimator.doWeaponSway = false;
+                    }
+                    else
+                    {
+                        CurrentGun.gunAnimator.doWeaponSway = true;
+
+                    }
+
                     break;
             }    
         }
@@ -301,10 +413,13 @@ public class InventoryController : MonoBehaviour
     {
         if (PrimaryGun == null || CurrentGun == PrimaryGun) return;
 
+        if(SecondaryGun != null)
+        {
+            SecondaryGun.gameObject.SetActive(false);
+        }
 
-        SecondaryGun.gameObject.SetActive(false);
-        PrimaryGun.gameObject.SetActive(true);
         CurrentGun = PrimaryGun;
+        PrimaryGun.gameObject.SetActive(true);
         
 
 
@@ -314,8 +429,12 @@ public class InventoryController : MonoBehaviour
     {
         if (SecondaryGun == null || CurrentGun == SecondaryGun) return;
 
-        PrimaryGun.gameObject.SetActive(true);
-        SecondaryGun.gameObject.SetActive(true);
+        if(PrimaryGun != null)
+        {
+            PrimaryGun.gameObject.SetActive(false);
+        }
         CurrentGun = SecondaryGun;
+
+        SecondaryGun.gameObject.SetActive(true);
     }
 }

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11dcad524e4bd9442a7307730cb74649, type: 3}
+  m_Name: PythonData
+  m_EditorClassIdentifier: 
+  HitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  gunName: Python
+  weaponType: 1
+  droppablePrefab: {fileID: 7475663006255069308, guid: d82b0e4cb44282c46bae70475680be2a,
+    type: 3}
+  FireRate: 0.5
+  primaryShootMode: 2
+  secondaryShootMode: 1
+  weaponShootType: 0
+  fireMode: 0
+  Spread: {x: -10, y: 3, z: 0.35}
+  returnSpeed: 2
+  snappiness: 6
+  kickBackAmt: 0.2
+  BulletsPerBurst: 5
+  TimeBetweenBurst: 0.1
+  ammoData: {fileID: 11400000, guid: e200106f5d3cbc446baa11454ef1231e, type: 2}
+  RoundsPerMag: 10
+  shotgunSpread: {x: 1, y: 1, z: 1}
+  NumBulletsPerShot: 5

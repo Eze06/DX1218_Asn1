@@ -56,6 +56,7 @@ public class GunAnimator : MonoBehaviour
     private Vector3 bobPos;
     private Vector3 currentBobPos;
 
+
     private void Awake()
     {
         doKickBack = true;
@@ -92,7 +93,6 @@ public class GunAnimator : MonoBehaviour
         targetADSpoint = Vector3.Lerp(targetADSpoint, startingPos, Time.deltaTime * adsSpeed);
         currentADSpoint = Vector3.Slerp(currentADSpoint, targetADSpoint, Time.deltaTime * adsSpeed);
 
-
         weaponParent.localPosition = currentKickBackPos + currentSwayPos + currentBobPos + currentADSpoint;
         weaponParent.localRotation = currentSwayRotation * CurrentSprintRotation;
 
@@ -101,7 +101,6 @@ public class GunAnimator : MonoBehaviour
     public void ADS()
     {
         DoADS = true;
-        Debug.Log(weaponFromADSTarget);
         targetADSpoint = weaponFromADSTarget;
         currentKickBackPos = Vector3.zero;
     }
@@ -147,7 +146,7 @@ public class GunAnimator : MonoBehaviour
         pos.y += Mathf.Sin(Time.time * bobFreq * frequencyMult) * bobAmp;
         pos.x += Mathf.Cos(Time.time * bobFreq / 2 * frequencyMult) * bobAmp * 2;
 
-        weaponParent.transform.localPosition += pos;
+        currentBobPos = pos;
     }
 
 }

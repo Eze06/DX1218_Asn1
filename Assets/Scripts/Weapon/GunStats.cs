@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 [CreateAssetMenu(menuName="Weapon/GunData")]
@@ -68,6 +69,10 @@ public class GunData : ScriptableObject
     public AmmoData ammoData;
     public int RoundsPerMag = 30;
 
+
+    [Header("Shotgun Variables")]
+    public Vector3 shotgunSpread = new Vector3(1, 1, 1);
+    public int NumBulletsPerShot = 5;
 
     private void OnEnable()
     {

@@ -7,24 +7,30 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] AmmoData ammoData;
     public GunData gunData;
-    ObjectPool<GameObject> TrailPool;
 
     [SerializeField] ParticleSystem muzzleFlash;
     private float nextFireTime;
     public int CurrentRounds;
 
     [HideInInspector] public CameraAnimation cameraAnimation;
-    [HideInInspector] public GunAnimator gunAnimator;
+    public GunAnimator gunAnimator;
+    [SerializeField] public Sprite GunIcon;    
     
-
     bool doneBurst;
 
-    private void Awake()
+    public void Init()
     {
+        Debug.Log("Awake,:" +  this.name);
         cameraAnimation = GameObject.Find("CameraAnimator").GetComponent<CameraAnimation>();
         gunAnimator = GetComponent<GunAnimator>();
         nextFireTime = 0;
         doneBurst = true;
+
+        cameraAnimation.snappiness = gunData.snappiness;
+        cameraAnimation.returnSpeed = gunData.returnSpeed;
+
+        CurrentRounds = gunData.RoundsPerMag;
+
     }
 
     public void ADS()
@@ -46,7 +52,7 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public void gunBob(float moveSpeed)
+    public void GunBob(float moveSpeed)
     {
         gunAnimator.GunBob(cameraAnimation.bobFreq, cameraAnimation.bobAmp, moveSpeed);
     }
@@ -56,14 +62,17 @@ public class Gun : MonoBehaviour
         if (Time.time <= nextFireTime && !burst)
             return;
 
+        if (CurrentRounds <= 0)
+            return;
+
+        CurrentRounds--;
+
         nextFireTime = Time.time + gunData.FireRate;
 
         Ray ray = fpsCamera.ViewportPointToRay(
         new Vector3(0.5f, 0.5f, 0.0f));
 
         cameraAnimation.RecoilFire(gunData.Spread);
-        cameraAnimation.snappiness = gunData.snappiness;
-        cameraAnimation.returnSpeed = gunData.returnSpeed;
 
         cameraAnimation.CameraShake();
 
@@ -88,9 +97,9 @@ public class Gun : MonoBehaviour
 
         for (int i = 0; i < gunData.BulletsPerBurst;i++)
         {
-            doneBurst = false;  
-            //if (CurrentRounds <= 0)
-            //    break;
+            doneBurst = false;
+            if (CurrentRounds <= 0)
+                break;
 
             Shoot(fpsCamera , burst: true);
             yield return new WaitForSeconds(gunData.TimeBetweenBurst);
@@ -104,6 +113,63 @@ public class Gun : MonoBehaviour
         GameObject droppableObject = Instantiate(gunData.droppablePrefab, FPSCamera.transform.position + FPSCamera.transform.forward * 1f, Quaternion.identity) ;
         droppableObject.GetComponent<Rigidbody>().AddForce(FPSCamera.transform.forward * 5f,ForceMode.Impulse);
         
+    }
+
+    public void Reload(InventoryAmmo invAmmo)
+    {
+        int totalAmmo = invAmmo.Amount;
+        if(totalAmmo >= gunData.RoundsPerMag)
+        {
+            int ammoToRemove = gunData.RoundsPerMag - CurrentRounds;
+            invAmmo.Amount -= ammoToRemove;
+            CurrentRounds = gunData.RoundsPerMag;
+        }
+        else
+        {
+            int AmmoNeeded = gunData.RoundsPerMag - CurrentRounds;
+            if(invAmmo.Amount < AmmoNeeded)
+            {
+                CurrentRounds += invAmmo.Amount;
+                invAmmo.Amount = 0;
+            }
+            else
+            {
+                invAmmo.Amount -= AmmoNeeded;
+                CurrentRounds += AmmoNeeded;
+            }
+        }
+    }
+
+    public void ShotGunShot(Camera fpsCamera)
+    {
+        muzzleFlash.Play();
+        for(int i = 0; i < gunData.NumBulletsPerShot; i++)
+        {
+            if (CurrentRounds <= 0)
+                break;
+
+            CurrentRounds--;
+
+
+            Vector3 dir = fpsCamera.transform.forward;
+            dir += new Vector3(Random.Range(-gunData.shotgunSpread.x, gunData.shotgunSpread.x),
+                               Random.Range(-gunData.shotgunSpread.y, gunData.shotgunSpread.y),
+                               0);
+            dir.Normalize();
+
+            cameraAnimation.RecoilFire(gunData.Spread);
+
+
+            if (Physics.Raycast(fpsCamera.transform.position, dir, out RaycastHit hitInfo, float.MaxValue))
+            {
+                if (hitInfo.collider.GetComponent<Surface>())
+                {
+                    SurfaceManager.Instance.DoSurfaceEffect(hitInfo.collider.GetComponent<Surface>(), hitInfo.point, hitInfo.normal);
+                }
+            }
+
+
+        }
     }
 
 
